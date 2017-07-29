@@ -9,14 +9,17 @@
 # 3. set the value of inverse of the matrix
 # 4. get the value of inverse of the matrix
 makeCacheMatrix <- function(x = matrix()) {
-        inverse <- NULL
+        inverse <- NULL ## create an empty vector to store the cache
         setmatrix <- function(y){
-                x <<- y
-                inverse <<- NULL
+                x <<- y ## assign to x a new matrix value in the parent environment
+                inverse <<- NULL ## clearing any cache from previous entry store in the parent environment
         }
-        getmatrix <- function() x
-        setinv <- function(inv) inverse <<- inv
-        getinv <- function() inverse
+        getmatrix <- function() x ## getmatrix will then returns x when it is being called
+        setinv <- function(inv) inverse <<- inv 
+        ## assign the inverse matrix to the cache through the inv argument
+        getinv <- function() inverse ## it can therefore call the value from the stored cache
+        ## A list is defined so that the $ operator can be used in the next function to call 
+        #all the stored value
         list(setmatrix = setmatrix, getmatrix = getmatrix,
              setinv = setinv,
              getinv = getinv)
@@ -26,19 +29,20 @@ makeCacheMatrix <- function(x = matrix()) {
 # matrix created with the makeCacheMatrix function. 
 # It first checks to see if the inverse has already been calculated.
 # If so, it gets it directly from the cache and skips the computation. 
-# If not, it calculates the inverse of the matrix 
+# If it is a NULL, it calculates the inverse of the matrix 
 # and sets the value of the inverse in the cache via the setinv function.
 
 ## Caution: This function assumes that the matrix supplied is always invertible.
 
 cacheSolve <- function(x, ...) {
-        inverse <- x$getinv()
+        inverse <- x$getinv() #get the value from the cache to prepare for the testing
         if(!is.null(inverse)) {
                 message("getting cached data")
                 return(inverse)
         }
-        data <- x$getmatrix()
-        inverse <- slove(data, ...)
+        ##if there is already a value stored in the cache, it will be returned
+        data <- x$getmatrix() #get the matrix value from the cache and assign it to the "data"
+        inverse <- solve(data, ...)# get the inverse matrix and assign it to inverse
         x$setinv(inverse)
-        inverse
+        inverse #return the inverse matrix
 }
